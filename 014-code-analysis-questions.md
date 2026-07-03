@@ -1,36 +1,44 @@
-# Code Analysis — Exam Prep (Code Reading & Project Structure Q&A)
+# Code Analysis — Exam Prep (Multiple Choice)
 
-This file simulates the type of questions you might get on the exam: **"here's some code, what does it do / what does it output / what's wrong with it?"** — plus questions about typical project architecture (`app.py`, `service.py`, `models.py`, etc.).
+Test-format version: code snippet + options, correct answer marked ✅ with a short explanation. Matches the real exam format (multiple choice only).
 
 ---
 
 ## 🐍 Python — Predict the Output
 
-**1.**
+**Q0.**
 ```python
 x = 5
 y = x
 x = 10
 print(y)
 ```
-**Question:** What is printed, and why?
-**Answer:** `5`. Integers are immutable — `y = x` copied the **value** at that moment. Reassigning `x` doesn't affect `y`.
+- 10
+- ✅ **5**
+- Error
+- None
+
+Explanation: `y = x` copies the integer **value** at that moment. Reassigning `x` afterward doesn't affect `y`.
 
 ---
 
-**2.**
+**Q1.**
 ```python
 a = [1, 2, 3]
 b = a
 b.append(4)
 print(a)
 ```
-**Question:** What is printed, and why?
-**Answer:** `[1, 2, 3, 4]`. Lists are mutable, and `b = a` made `b` **reference the same list object** as `a`. Modifying `b` also changes `a`.
+- [1, 2, 3]
+- ✅ **[1, 2, 3, 4]**
+- Error
+- [4]
+
+Explanation: `b = a` makes `b` reference the **same list object**. Modifying `b` also changes `a`.
 
 ---
 
-**3.**
+**Q2.**
 ```python
 def add_item(item, lst=[]):
     lst.append(item)
@@ -39,34 +47,46 @@ def add_item(item, lst=[]):
 print(add_item(1))
 print(add_item(2))
 ```
-**Question:** What is printed on each call, and why?
-**Answer:** `[1]` then `[1, 2]`. This is the classic **mutable default argument bug** — the default list `[]` is created **once**, when the function is defined, and reused across calls instead of being reset each time.
+- [1] then [2]
+- ✅ **[1] then [1, 2]**
+- [1] then [1]
+- Error on second call
+
+Explanation: Mutable default argument bug — the default list is created **once** at function definition and reused across calls.
 
 ---
 
-**4.**
+**Q3.**
 ```python
 for i in range(3):
     if i == 1:
         continue
     print(i)
 ```
-**Question:** What is printed?
-**Answer:** `0` then `2`. When `i == 1`, `continue` skips the `print(i)` for that iteration and moves to the next.
+- 0 1 2
+- ✅ **0 2**
+- 0 1
+- 1 2
+
+Explanation: `continue` skips `print(i)` only when `i == 1`, moving to the next iteration.
 
 ---
 
-**5.**
+**Q4.**
 ```python
 print(1 == 1.0)
 print(1 is 1.0)
 ```
-**Question:** What do these two lines print, and why are they different?
-**Answer:** `True` then `False`. `==` compares **value** (1 equals 1.0 numerically). `is` compares **identity/object type** — an `int` and a `float` are different objects, so `is` is `False`.
+- True then True
+- False then False
+- ✅ **True then False**
+- False then True
+
+Explanation: `==` compares value (equal numerically). `is` compares identity — `int` and `float` are different object types.
 
 ---
 
-**6.**
+**Q5.**
 ```python
 try:
     result = 10 / 0
@@ -75,30 +95,33 @@ except ZeroDivisionError:
 finally:
     print("Done")
 ```
-**Question:** What is the output?
-**Answer:**
-```
-Cannot divide by zero
-Done
-```
-The `except` block catches the error and prints its message; `finally` **always runs** afterward regardless of whether an exception occurred.
+- Cannot divide by zero
+- Done
+- ✅ **Cannot divide by zero, then Done**
+- Error crash, nothing printed
+
+Explanation: `except` catches the error and prints its message; `finally` always runs afterward.
 
 ---
 
-**7.**
+**Q6.**
 ```python
 d = {"a": 1, "b": 2}
 print(d.get("c", 0))
 print(d["c"])
 ```
-**Question:** What happens on each line?
-**Answer:** First line prints `0` (key `"c"` doesn't exist, so `.get()` returns the default). Second line **raises a `KeyError`**, because `dict[key]` doesn't accept a default and crashes if the key is missing.
+- 0 then 0
+- ✅ **0 then raises KeyError**
+- None then None
+- Error on both lines
+
+Explanation: `.get()` with a default never raises; direct `dict[key]` access raises `KeyError` if the key is missing.
 
 ---
 
 ## 🧱 OOP — Read & Explain
 
-**8.**
+**Q7.**
 ```python
 class Animal:
     def __init__(self, name):
@@ -115,17 +138,16 @@ d = Dog("Rex")
 print(a.speak())
 print(d.speak())
 ```
-**Question:** What is printed, and what OOP concept does `Dog.speak()` demonstrate?
-**Answer:**
-```
-Generic makes a sound
-Rex barks
-```
-`Dog` **overrides** the `speak()` method inherited from `Animal` — this is **method overriding**.
+- Generic makes a sound / Generic makes a sound
+- ✅ **Generic makes a sound / Rex barks**
+- Rex barks / Rex barks
+- Error
+
+Explanation: `Dog` **overrides** `speak()`. This is method overriding.
 
 ---
 
-**9.**
+**Q8.**
 ```python
 class Counter:
     count = 0
@@ -137,12 +159,16 @@ c2 = Counter()
 c3 = Counter()
 print(Counter.count)
 ```
-**Question:** What is printed, and why?
-**Answer:** `3`. `count` is a **class attribute**, shared across all instances. Each time `__init__` runs, it increments the **same shared** `Counter.count`, not an instance copy.
+- 1
+- 0
+- ✅ **3**
+- Error
+
+Explanation: `count` is a **class attribute**, shared by all instances — each `__init__` call increments the same shared value.
 
 ---
 
-**10.**
+**Q9.**
 ```python
 class Base:
     def __init__(self):
@@ -157,12 +183,16 @@ class Child(Base):
 
 c = Child()
 ```
-**Question:** What is printed, and why (even though `setup` is only explicitly called inside `Base.__init__`)?
-**Answer:** `Child setup`. Even though `self.setup()` is called from `Base.__init__`, Python looks up the method on the **actual object's class** (`Child`) first — this is dynamic method resolution / polymorphism, not the literal class where the call is written.
+- Base setup
+- ✅ **Child setup**
+- Nothing is printed
+- Both "Base setup" and "Child setup"
+
+Explanation: Python resolves `self.setup()` on the **actual object's class** (`Child`) at runtime, even though the call is written inside `Base.__init__`.
 
 ---
 
-**11.**
+**Q10.**
 ```python
 from abc import ABC, abstractmethod
 
@@ -173,14 +203,18 @@ class Shape(ABC):
 
 s = Shape()
 ```
-**Question:** What happens when this code runs, and why?
-**Answer:** It raises `TypeError: Can't instantiate abstract class Shape with abstract method area`. Because `Shape` has an `@abstractmethod` that isn't implemented, it **cannot be instantiated directly** — it must be subclassed with `area()` implemented.
+- Creates an empty Shape object with no error
+- ✅ **Raises TypeError: Can't instantiate abstract class Shape with abstract method area**
+- Prints "Shape"
+- Raises SyntaxError
+
+Explanation: A class with an unimplemented `@abstractmethod` cannot be instantiated directly.
 
 ---
 
-## 🍶 Flask / Backend — Explain the Code & Project Structure
+## 🍶 Flask / Backend — Project Structure
 
-**12.**
+**Q11.**
 ```python
 # app.py
 from flask import Flask
@@ -195,12 +229,23 @@ def users():
 if __name__ == '__main__':
     app.run(debug=True)
 ```
-**Question:** What is the role of `app.py` here, and what does `debug=True` do?
-**Answer:** `app.py` is the **entry point** of the Flask application — it creates the Flask app instance and defines the routes (URL → function mapping). It imports the actual logic (`get_all_users`) from another file rather than writing business logic directly in the route. `debug=True` enables Flask's **debug mode**: auto-reloads the server on code changes and shows detailed error tracebacks in the browser (should be `False` in production).
+What is the role of `app.py` here?
+- It stores the database schema
+- ✅ **It's the entry point — creates the Flask app instance and defines routes, delegating logic to `service.py`**
+- It contains all the business logic
+- It's the HTML template file
 
 ---
 
-**13.**
+**Q12.** In the same file, what does `debug=True` do in `app.run(debug=True)`?
+- Makes the app run faster
+- ✅ **Enables auto-reload on code changes and shows detailed error tracebacks in the browser**
+- Disables all error messages
+- Deploys the app to production
+
+---
+
+**Q13.**
 ```python
 # service.py
 import sqlite3
@@ -213,12 +258,15 @@ def get_all_users():
     conn.close()
     return {"users": rows}
 ```
-**Question:** What is the purpose of `service.py` in this project structure? Why isn't this logic written directly inside `app.py`?
-**Answer:** `service.py` contains the **business logic / data-access layer** — in this case, querying the database and returning the results. It's separated from `app.py` (the routing layer) to follow **separation of concerns**: routes stay clean and only handle HTTP request/response, while `service.py` handles *how* the data is actually fetched/processed. This makes the code more organized, reusable, and easier to test.
+Why is this logic in `service.py` instead of directly in `app.py`?
+- Flask requires it
+- ✅ **Separation of concerns — routes stay focused on HTTP handling, while `service.py` handles data access/business logic**
+- It's not possible to query a database from `app.py`
+- `service.py` runs faster than `app.py`
 
 ---
 
-**14.**
+**Q14.**
 ```python
 # models.py
 class User:
@@ -230,12 +278,15 @@ class User:
     def to_dict(self):
         return {"id": self.id, "name": self.name, "email": self.email}
 ```
-**Question:** What is the role of a `models.py` file in a typical backend project? What does `to_dict()` do here, and why might it be needed?
-**Answer:** `models.py` defines the **data structures/entities** of the application (here, a `User`) — usually mapping to database tables. `to_dict()` converts the object into a plain dictionary, which is needed because Flask's `jsonify()` can't directly serialize custom class instances to JSON — it needs a dict first.
+Why is `to_dict()` needed here?
+- To print the object nicely
+- ✅ **`jsonify()` can't serialize custom class instances directly — it needs a plain dictionary first**
+- To save the object to the database
+- To validate the data
 
 ---
 
-**15.**
+**Q15.**
 ```python
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
@@ -244,12 +295,23 @@ def get_user(user_id):
         abort(404)
     return jsonify(user.to_dict())
 ```
-**Question:** Explain what this route does, piece by piece.
-**Answer:** `<int:user_id>` is a **dynamic path parameter** that captures an integer from the URL (e.g. `/users/5` → `user_id=5`). The function looks up the user by that ID. If no user is found, `abort(404)` immediately returns a "Not Found" error. Otherwise, it converts the user object to a dictionary and returns it as a JSON response via `jsonify()`.
+What does `<int:user_id>` represent?
+- A fixed route name
+- ✅ **A dynamic path parameter that captures an integer from the URL (e.g. `/users/5` → `user_id=5`)**
+- A query parameter
+- A request body field
 
 ---
 
-**16.**
+**Q16.** In the same route, what does `abort(404)` do?
+- Logs the error and continues normally
+- ✅ **Immediately stops the request and returns a 404 Not Found response**
+- Deletes the user
+- Restarts the Flask server
+
+---
+
+**Q17.**
 ```python
 @app.route('/users', methods=['POST'])
 def create_user():
@@ -259,14 +321,25 @@ def create_user():
     new_user = save_user(data)
     return jsonify(new_user), 201
 ```
-**Question:** What does this route do? What do the `400` and `201` mean here?
-**Answer:** It creates a new user from JSON sent in the request body. It first validates that `"name"` was provided — if not, it returns an error with status **400 (Bad Request)**. If valid, it saves the user and returns the new user data with status **201 (Created)**, indicating a resource was successfully created.
+What does the `400` status code indicate here?
+- The user was created successfully
+- ✅ **Bad Request — the client sent invalid/incomplete data (missing "name")**
+- The server crashed
+- The user already exists
+
+---
+
+**Q18.** In the same route, what does the `201` status code indicate?
+- OK, generic success
+- ✅ **Created — a new resource was successfully created**
+- Redirect
+- Forbidden
 
 ---
 
 ## 🗄️ SQL — Read the Query
 
-**17.**
+**Q19.**
 ```sql
 SELECT name, COUNT(*) AS total_orders
 FROM orders
@@ -275,50 +348,67 @@ GROUP BY name
 HAVING COUNT(*) > 2
 ORDER BY total_orders DESC;
 ```
-**Question:** In plain English, what does this query return?
-**Answer:** It returns each user's **name** and their **total number of orders**, but only for users who have placed **more than 2 orders**, sorted from the **highest** order count to the lowest. The `JOIN` connects `orders` to `users` via `user_id`.
+What does this query return?
+- All users regardless of order count, sorted alphabetically
+- ✅ **Each user's name and order count, only for users with more than 2 orders, sorted from highest to lowest count**
+- Only users with exactly 2 orders
+- All orders with no grouping
 
 ---
 
-**18.**
+**Q20.**
 ```sql
 SELECT * FROM products WHERE price > 50 AND stock = 0;
 ```
-**Question:** What does this query find?
-**Answer:** All products that cost **more than 50** and are **out of stock** (`stock = 0`).
+What does this query find?
+- All products under 50 that are in stock
+- ✅ **All products priced above 50 that are out of stock**
+- All products regardless of price or stock
+- Products with stock greater than 50
 
 ---
 
-**19.**
+**Q21.**
 ```sql
 UPDATE users SET is_active = 0 WHERE last_login < '2024-01-01';
 ```
-**Question:** What does this statement do? What could go wrong if `WHERE` is forgotten?
-**Answer:** It deactivates (`is_active = 0`) all users whose last login was before Jan 1, 2024. If the `WHERE` clause is forgotten, the `UPDATE` would apply to **every row in the table**, deactivating all users — a common and dangerous mistake.
+What would happen if the `WHERE` clause were removed?
+- Nothing changes
+- The query would fail to run
+- ✅ **Every row in the table would be updated, deactivating all users**
+- Only the first row would be updated
 
 ---
 
 ## 🔧 Git — Read the Command Sequence
 
-**20.**
+**Q22.**
 ```bash
 git checkout -b feature-login
 # ...make changes, commit...
 git checkout main
 git merge feature-login
 ```
-**Question:** What is happening in this sequence, step by step?
-**Answer:** 1) Creates and switches to a new branch called `feature-login`. 2) Work is done and committed on that branch. 3) Switches back to the `main` branch. 4) Merges the changes from `feature-login` into `main`, combining the two histories.
+What is the correct step-by-step description?
+- Deletes `feature-login` and creates `main`
+- ✅ **Creates and switches to `feature-login`, work is committed there, then switches back to `main` and merges `feature-login` into it**
+- Merges `main` into `feature-login`
+- Pushes `feature-login` directly to GitHub
 
 ---
 
-**21.**
+**Q23.**
 ```bash
 git add .
 git commit -m "fix bug"
 git push origin main
 ```
-**Question:** What does each command do, and in what order does data move from local to remote?
-**Answer:** `git add .` **stages** all changed files. `git commit -m "..."` **saves** the staged changes as a new commit in the local repository, with a message. `git push origin main` **uploads** those local commits to the `main` branch of the remote repository (`origin`, e.g. GitHub).
+What is the correct order of what happens to the data?
+- Commit → stage → upload
+- ✅ **Stage all changes → save as a local commit → upload the commit to the remote `main` branch**
+- Upload → stage → commit
+- Stage → upload → commit
 
 ---
+
+*Total: 24 multiple-choice questions — Python, OOP, Flask/backend architecture, SQL, and Git.*
